@@ -376,7 +376,7 @@ function check(n) {
     $('.' + n).css("background", "#6eff90");
     let currentVal = dynamicBalance[i];
     let potentialWin = Math.round(currentBet * currentVal);
-    $('.popup').html('<span class="close-cross" onclick="closePopup()">×</span><p> ' + potentialWin + '</p> <input class="resetbtn" type="button" value="Играть сначала" onclick="initGame()">');
+    $('.popup').html('<span class="close-cross" onclick="closePopup()">×</span><p> +🪙' + potentialWin + '</p> <input class="resetbtn" type="button" value="Играть сначала" onclick="initGame()">');
     if (winBal) winBal.value = potentialWin;
     checkHighScore(currentVal);
     i++;
@@ -403,13 +403,17 @@ function handleBetInput(value) {
 
 function updateCoinsDisplay() {
   if (document.getElementById('balance')) {
-    document.getElementById('balance').value = 'Баланс: ' + coinsBalance;
+    document.getElementById('balance').value = '🪙 ' + coinsBalance;
   }
   if (document.getElementById('coinsDisplay')) {
     document.getElementById('coinsDisplay').innerText = coinsBalance;
   }
   localStorage.setItem('miner_coins', coinsBalance);
-  vkBridge.send('VKWebAppShowLeaderBoardBox', { user_result: Math.round(coinsBalance) });
+  
+  vkBridge.send('VKWebAppStorageSet', {
+    key: 'miner_coins_balance',
+    value: String(Math.round(coinsBalance))
+  });
 }
 
 function closePopup() {
@@ -424,7 +428,7 @@ function cashout() {
   let winAmount = Math.round(currentBet * currentVal);
   coinsBalance += winAmount;
   updateCoinsDisplay();
-  $('.win.popup').html('<p>Вы забрали: ' + winAmount + ' 🪙</p> <p>Коэф: ' + currentVal + '</p> <input class="resetbtn" type="button" value="Играть сначала" onclick="initGame()">');
+  $('.win.popup').html('<p>Вы забрали: ' + winAmount + ' 🪙</p> <input class="resetbtn" type="button" value="Играть сначала" onclick="initGame()">');
   $('.win').css('display', 'flex');
   table = 25;
   $('#cashoutBtn').hide();
@@ -471,8 +475,8 @@ $(document).ready(function() {
 <body>
   <center>
     <div class="game-header">
-      <input type="button" value="Р: 0" id="highScoreDisplay" readonly style="display:none;">
-      <input type="submit" value="Баланс: 1000" id='balance'> </div>
+      <!--   <input type="button" value="Р: 0" id="highScoreDisplay" readonly style="display:none;"> -->   
+      <input type="submit" value=" 1000" id='balance'> </div>
   </center>
   <br>
   <center>
@@ -529,15 +533,12 @@ $(document).ready(function() {
   <center>
     <input type="button" value="Перезапуск" onclick="window.location.reload()">
     <input onclick="check(openx)" style="font-weight: bold" type="button" value="Авто"> </center>
-  <script>
-    // Показываем сохраненный рекорд сразу при загрузке страницы  document.getElementById('highScoreDisplay').innerText = localStorage.getItem('miner_high_score') || 0;
-  </script>
   <br>
-  <br> <span class="righttxt">version 2.0</span>
+  <!--  <br> <span class="righttxt">version 2.0</span>
   <br>
-  <center>
-    <input type="button" value="Сбросить рекорд" onclick="resetHighScore()" style="background: linear-gradient(45deg, #ff4e50, #f9d423); width: 200px; height: 40px; font-size: 1em; font-weight: bold;">
-  </center>
+   <center>
+   <input type="button" value="Сбросить рекорд" onclick="resetHighScore()" style="background: linear-gradient(45deg, #ff4e50, #f9d423); width: 200px; height: 40px; font-size: 1em; font-weight: bold;">
+ </center>-->
   <br>
   <center>
     <input type="button" value="Таблица рекордов" onclick="showVKLeaderboard()" style="background: linear-gradient(45deg, #28C3F7, #B563FF); width: 200px; height: 40px; font-size: 1em; font-weight: bold; color: white; border-radius: .5em; border: none; cursor: pointer;">
